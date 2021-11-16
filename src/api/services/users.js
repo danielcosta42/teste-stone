@@ -1,4 +1,6 @@
+import Product from '../../database/models/Product';
 import User from '../../database/models/User';
+import UserProduct from '../../database/models/UserProduct';
 import jwt from 'jsonwebtoken';
 
 import paginationFormatter from '../utils/paginationFormatter';
@@ -7,35 +9,49 @@ module.exports = () => {
   const service = {};
 
   service.findAll = async (req, res) => {
-    let { page = 1, per_page: perPage = 10 } = req.query;
-    if (Number(page) <= 0) page = 1;
-    if (Number(perPage) < 0) perPage = 1000;
+    const { type } = req.body;
+    if (type == 'list') {
+      let { page = 1, per_page: perPage = 10 } = req.query;
+      if (Number(page) <= 0) page = 1;
+      if (Number(perPage) < 0) perPage = 1000;
 
-    let { findOptions } = req.query;
-    console.log();
-    if (!findOptions) findOptions = '*';
+      let { findOptions } = req.query;
+      console.log();
+      if (!findOptions) findOptions = '*';
 
-    const users = await User.sequelize.query(
-      `select ${findOptions} from users`,
-      {
-        type: User.sequelize.QueryTypes.Select,
-        model: User,
-        mapToModel: true,
-      }
-    );
+      const users = await User.sequelize.query(
+        `select ${findOptions} from users`,
+        {
+          type: User.sequelize.QueryTypes.Select,
+          model: User,
+          mapToModel: true,
+        }
+      );
 
-    const usersCount = await User.count({
-      distinct: true,
-    });
+      const usersCount = await User.count({
+        distinct: true,
+      });
 
-    const paginatedResults = paginationFormatter(
-      users,
-      page,
-      perPage,
-      usersCount
-    );
+      const paginatedResults = paginationFormatter(
+        users,
+        page,
+        perPage,
+        usersCount
+      );
 
-    return res.status(200).json(paginatedResults);
+      return res.status(200).json(paginatedResults);
+
+    } else if (type == 'products'){
+
+      const result = await User.findAll({
+        include: [
+          {
+            association: 'userProducts'
+          }
+        ],
+      });
+      return res.status(200).json(result);
+    }
   };
 
   service.findOne = async (req, res) => {

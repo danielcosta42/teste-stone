@@ -8,6 +8,8 @@ module.exports = () => {
 
   validations.findOne = async () => [];
 
+  validations.findAllProducts = async () => [];
+
   validations.findAll = async () => [];
 
   validations.create = async (req) => {

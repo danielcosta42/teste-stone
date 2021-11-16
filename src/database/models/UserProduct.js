@@ -20,6 +20,7 @@ class UserProduct extends Model {
       as: 'product',
     });
   }
+
 }
 
 export default UserProduct;

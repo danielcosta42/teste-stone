@@ -29,6 +29,11 @@ module.exports = function(app) {
   app.post(`${baseURL}`, (req, res) =>
     baseValidateAndControllerCall('genericAction', req, res)
   );
+
+  app.post(`${baseURL}/products`, (req, res) =>
+    baseValidateAndControllerCall('searchProducts', req, res)
+  );
+
   app.delete(`${baseURL}/:id`, authMiddleware, (req, res) =>
     baseValidateAndControllerCall('delete', req, res)
   );

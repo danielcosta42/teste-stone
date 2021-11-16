@@ -14,6 +14,10 @@ class User extends Model {
       }
     );
   }
+
+  static associate(models){
+    this.hasMany(models.UserProduct, { foreignKey: 'user_id', as: 'userProducts'});
+  }
 }
 
 export default User;
