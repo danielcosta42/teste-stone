@@ -2,7 +2,8 @@ import ValidateExceptionns from '../utils/validateExceptions';
 
 import adminAuth from '../middleware/adminAuth';
 
-module.exports = (app) => {
+module.exports = function(app) {
+  //console.log(app.services.products)
   const service = app.services.products;
   const validations = app.validations.products;
 

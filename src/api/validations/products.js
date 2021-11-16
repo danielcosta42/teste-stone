@@ -3,7 +3,7 @@ import Product from '../../database/models/Product';
 
 import FieldMessage from '../utils/fieldmessage';
 
-module.exports = () => {
+module.exports = (products) => {
   const validations = {};
 
   validations.findAll = async () => [];

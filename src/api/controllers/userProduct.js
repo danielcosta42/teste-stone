@@ -2,7 +2,7 @@ import ValidateExceptionns from '../utils/validateExceptions';
 
 import authMiddleware from '../middleware/auth';
 
-module.exports = (app) => {
+module.exports = function(app) {
   const service = app.services.userProduct;
   const validations = app.validations.userProduct;
 
@@ -26,7 +26,7 @@ module.exports = (app) => {
     }
   };
 
-  app.post(`${baseURL}`, authMiddleware, (req, res) =>
+  app.post(`${baseURL}`, (req, res) =>
     baseValidateAndControllerCall('genericAction', req, res)
   );
   app.delete(`${baseURL}/:id`, authMiddleware, (req, res) =>
