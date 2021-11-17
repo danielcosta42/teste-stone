@@ -45,7 +45,7 @@ module.exports = () => {
 
       const result = await User.findAll({
         attributes: ['name'],
-        group: ['User.id', 'userProducts->product.id', 'userProducts.id'],
+        group: ['User.id', 'User.name', 'userProducts->product.id', 'userProducts.id'],
         //raw: true,
         include: [
           {
@@ -53,19 +53,31 @@ module.exports = () => {
             model: UserProduct,
             as: 'userProducts',
             group: 'product_id',
-            attributes: [['quantity', 'quantity']],
+            attributes: ['quantity'],
             include: [
               {
                 model: Product,
                 as: 'product',
                 group: 'id',
-                attributes: [['name', 'product']],
+                attributes: ['name'],
               }
             ]
           }
         ],
       });
-      return res.status(200).json(result);
+      const productsByUser = result.map(item => {
+        const container = {};
+        container[item.name] = item.userProducts.map((item) => {
+          const container = {};
+            container[item.product.name] = item.quantity
+
+          return container
+        });
+        return container
+      })
+
+      console.log(productsByUser)
+      return res.status(200).json(productsByUser);
     }
   };
 
