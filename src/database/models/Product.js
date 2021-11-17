@@ -18,6 +18,15 @@ class Product extends Model {
       }
     );
   }
+
+  static associate(models) {
+
+    this.hasMany(models.UserProduct, {
+      foreignKey: 'product_id',
+      as: 'product',
+    });
+  }
+
 }
 
 export default Product;
