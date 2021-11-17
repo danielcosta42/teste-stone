@@ -44,9 +44,24 @@ module.exports = () => {
     } else if (type == 'products'){
 
       const result = await User.findAll({
+        attributes: ['name'],
+        group: ['User.id', 'userProducts->product.id', 'userProducts.id'],
+        //raw: true,
         include: [
           {
-            association: 'userProducts'
+            required: true,
+            model: UserProduct,
+            as: 'userProducts',
+            group: 'product_id',
+            attributes: [['quantity', 'quantity']],
+            include: [
+              {
+                model: Product,
+                as: 'product',
+                group: 'id',
+                attributes: [['name', 'product']],
+              }
+            ]
           }
         ],
       });
