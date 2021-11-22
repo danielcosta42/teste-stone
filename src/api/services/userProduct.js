@@ -7,10 +7,9 @@ import paginationFormatter from '../utils/paginationFormatter';
 module.exports = () => {
   const service = {};
 
-  service.genericAction = async (req, res) => {
-    const { type, userId, productId, quantity } = req.body;
+  service.listProducts = async (req, res) => {
+    cont { type } = req.body;
 
-    if (type == 'list') {
       const result = await UserProduct.findAll({
         include: [
           {
@@ -24,8 +23,14 @@ module.exports = () => {
         ],
       });
 
-      res.send(result);
-    } else if (type == 'add') {
+      res.status(200).send(result);
+
+  }
+
+  service.genericAction = async (req, res) => {
+    const { type, userId, productId, quantity } = req.body;
+
+    if (type == 'add') {
       res.send(
         await UserProduct.create({
           userId,

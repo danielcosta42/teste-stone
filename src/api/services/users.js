@@ -69,7 +69,8 @@ module.exports = () => {
         const container = {};
         container[item.name] = item.userProducts.map((item) => {
           const container = {};
-            container[item.product.name] = item.quantity
+
+          container[item.product.name] = item.quantity
 
           return container
         });
