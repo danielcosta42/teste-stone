@@ -84,7 +84,6 @@ module.exports = () => {
 
   service.findOne = async (req, res) => {
     const { userId } = req.params;
-    console.log('entrando aqui');
     const user = await User.findByPk(userId);
 
     return res.status(200).json(user);
@@ -112,8 +111,6 @@ module.exports = () => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
-
-    console.log('antes ');
 
     return res.json({
       token: jwt.sign({ ...user }, 'mySecret', {
