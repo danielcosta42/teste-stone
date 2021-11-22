@@ -8,7 +8,7 @@ module.exports = () => {
   const service = {};
 
   service.listProducts = async (req, res) => {
-    cont { type } = req.body;
+    const { type } = req.body;
 
       const result = await UserProduct.findAll({
         include: [
@@ -25,7 +25,7 @@ module.exports = () => {
 
       res.status(200).send(result);
 
-  }
+  };
 
   service.genericAction = async (req, res) => {
     const { type, userId, productId, quantity } = req.body;

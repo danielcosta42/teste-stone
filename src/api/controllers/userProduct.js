@@ -26,6 +26,10 @@ module.exports = function(app) {
     }
   };
 
+  app.get(`${baseURL}`, (req, res) =>
+    baseValidateAndControllerCall('listProducts', req, res)
+  );
+
   app.post(`${baseURL}`, (req, res) =>
     baseValidateAndControllerCall('genericAction', req, res)
   );
