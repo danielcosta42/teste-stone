@@ -76,7 +76,7 @@ module.exports = () => {
         }
 
       }else{
-        response = { error: 1, message: "Usuário source não possue a quantitidade do produto" };
+        response = { error: 1, message: "Usuário source não possui a quantitidade do produto" };
       }
       res.json(response);
     }
