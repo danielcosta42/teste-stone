@@ -28,7 +28,7 @@ module.exports = () => {
   };
 
   service.genericAction = async (req, res) => {
-    const { type, userId, productId, quantity, userSource, userTarget } = req.body;
+    const { type, userId, productId, quantity, userSource, userTarget, productSource, productTarget } = req.body;
 
     if (type == 'add') {
       res.send(
@@ -44,8 +44,11 @@ module.exports = () => {
       );
     } else if (type == 'tradeProducts') {
       let response = {};
-      const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productId } });
-      const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productId } });
+      const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productSource } });
+
+      const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productSource } });
+
+      const targetA = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productSource } });
 
       if(source.quantity >= req.body.quantity){
         if(target !== null){
@@ -55,8 +58,17 @@ module.exports = () => {
           await target.increment(['quantity'], { by: req.body.quantity });
 
           response = { error: 0, message: "Itens trocados com sucesso" };
+        }else if(targetA === null){
+          await source.decrement(['quantity'], { by: req.body.quantity });
+          await UserProduct.create({
+            userId: req.body.userTarget,
+            productId: req.body.productSource,
+            quantity,
+          });
+          response = { error: 0, message: "Itens trocados com sucesso" };
+
         }else{
-          response = { error: 1, message: "Usuário target não possue o item selecionado" };
+          response = { error: 0, message: "Pessoa ou produto não encontrado" };
         }
 
       }else{
