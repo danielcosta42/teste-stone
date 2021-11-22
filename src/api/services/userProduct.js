@@ -58,8 +58,10 @@ module.exports = () => {
         if(target !== null){
 
           await source.decrement(['quantity'], { by: req.body.quantity });
+          await sourceA.increment(['quantity'], { by: req.body.quantity });
 
           await target.increment(['quantity'], { by: req.body.quantity });
+          await targetA.decrement(['quantity'], { by: req.body.quantity });
 
           response = { error: 0, message: "Itens trocados com sucesso" };
         }else if(targetA === null){
