@@ -43,6 +43,7 @@ module.exports = () => {
         await UserProduct.update({ ...req.body }, { where: { user_id: req.body.userId, product_id: req.body.productId } })
       );
     } else if (type == 'tradeProducts') {
+      let response = {};
       const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productId } });
       const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productId } });
 
@@ -53,11 +54,15 @@ module.exports = () => {
 
           await target.increment(['quantity'], { by: req.body.quantity });
 
-          res.json({ error: 0, message: "Itens trocados com sucesso" });
+          response = { error: 0, message: "Itens trocados com sucesso" };
+        }else{
+          response = { error: 1, message: "Usuário target não possue o item selecionado" };
         }
 
+      }else{
+        response = { error: 1, message: "Usuário source não possue a quantitidade do produto" };
       }
-      res.json({ error: 1, message: "Não foi possível trocar itens" });
+      res.json(response);
     }
   };
 
