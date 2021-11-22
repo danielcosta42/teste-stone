@@ -43,14 +43,18 @@ module.exports = () => {
         await UserProduct.update({ ...req.body }, { where: { user_id: req.body.userId, product_id: req.body.productId } })
       );
     } else if (type == 'tradeProducts') {
+      const { Op } = require("sequelize");
       let response = {};
-      const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productSource } });
 
-      const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productSource } });
+      const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productSource, quantity: { [Op.ne]: 0 } } });
 
-      const targetA = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productSource } });
+      const sourceA = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productTarget, quantity: { [Op.ne]: 0 } } });
 
-      if(source.quantity >= req.body.quantity){
+      const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productSource, quantity: { [Op.ne]: 0 } } });
+
+      const targetA = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productTarget, quantity: { [Op.ne]: 0 } } });
+
+      if(source !== null && source.quantity >= req.body.quantity){
         if(target !== null){
 
           await source.decrement(['quantity'], { by: req.body.quantity });
