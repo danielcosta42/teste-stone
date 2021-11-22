@@ -28,7 +28,7 @@ module.exports = () => {
   };
 
   service.genericAction = async (req, res) => {
-    const { type, userId, productId, quantity } = req.body;
+    const { type, userId, productId, quantity, userSource, userTarget } = req.body;
 
     if (type == 'add') {
       res.send(
@@ -38,6 +38,26 @@ module.exports = () => {
           quantity,
         })
       );
+    } else if (type == 'updateQuantity') {
+      res.send(
+        await UserProduct.update({ ...req.body }, { where: { user_id: req.body.userId, product_id: req.body.productId } })
+      );
+    } else if (type == 'tradeProducts') {
+      const source = await UserProduct.findOne({ where: { user_id: req.body.userSource, product_id: req.body.productId } });
+      const target = await UserProduct.findOne({ where: { user_id: req.body.userTarget, product_id: req.body.productId } });
+
+      if(source.quantity >= req.body.quantity){
+        if(target !== null){
+
+          await source.decrement(['quantity'], { by: req.body.quantity });
+
+          await target.increment(['quantity'], { by: req.body.quantity });
+
+          res.json({ error: 0, message: "Itens trocados com sucesso" });
+        }
+
+      }
+      res.json({ error: 1, message: "Não foi possível trocar itens" });
     }
   };
 
