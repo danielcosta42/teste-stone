@@ -8,7 +8,6 @@ module.exports = () => {
 
   service.findOne = async (req, res) => {
     const { productId } = req.params;
-    console.log('entrando aqui');
     const product = await Product.findByPk(productId);
 
     return res.status(200).json(product);

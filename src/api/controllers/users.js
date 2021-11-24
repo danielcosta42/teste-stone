@@ -30,7 +30,7 @@ module.exports = (app) => {
     baseValidateAndControllerCall('findOne', req, res)
   );
 
-  app.get(`${baseURL}`, authMiddleware, (req, res) =>
+  app.get(`${baseURL}`, (req, res) =>
     baseValidateAndControllerCall('findAll', req, res)
   );
 
